@@ -1,13 +1,17 @@
 package com.acontinue.continueparacorretores
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.fragment.app.FragmentTransaction
 import com.acontinue.continueparacorretores.androidExtensions.drawableFromUrl
+import com.acontinue.continueparacorretores.fragments.ClientsFragment
+import com.acontinue.continueparacorretores.fragments.RequestsFragment
 import com.acontinue.continueparacorretores.models.Corretor
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -23,7 +27,12 @@ import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 
-class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, CoroutineScope {
+class DashboardActivity : AppCompatActivity(),
+    NavigationView.OnNavigationItemSelectedListener,
+    CoroutineScope,
+    ClientsFragment.OnFragmentInteractionListener,
+    RequestsFragment.OnFragmentInteractionListenerRequests{
+
     private val job = Job()
     override val coroutineContext: CoroutineContext get() = Dispatchers.Main + job
 
@@ -31,7 +40,7 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     private var corretor:Corretor? = null
 
     private val database = FirebaseDatabase.getInstance()
-    var myRef = database
+    private var myRef = database
         .getReference("users")
         .child("corretor")
 
@@ -76,6 +85,11 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.content, ClientsFragment.newInstance(user, corretor))
+            .commit()
     }
 
     override fun onBackPressed() {
@@ -91,7 +105,10 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_clients -> {
-                // Handle the camera action
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.content, ClientsFragment.newInstance(user, corretor))
+                    .commit()
             }
             R.id.nav_new_clients -> {
 
@@ -101,6 +118,10 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun onFragmentInteraction(uri: Uri) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onStart() {
@@ -113,9 +134,6 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             while(name_email == null) delay(100)
             withContext(Dispatchers.Main) {
                 name_email.text = user?.email ?: ""
-            }
-
-            withContext(Dispatchers.Main) {
                 mAuth.addAuthStateListener(mListener)
             }
         }

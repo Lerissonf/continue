@@ -16,6 +16,5 @@
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/logout_variant"
                 android:title="Logout"/>
-
     </group>
 </menu>
