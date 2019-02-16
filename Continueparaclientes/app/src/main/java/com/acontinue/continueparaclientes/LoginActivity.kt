@@ -11,11 +11,22 @@ import kotlinx.android.synthetic.main.activity_login.*
 import com.google.firebase.auth.FirebaseAuth
 import androidx.appcompat.app.AppCompatDelegate
 import com.acontinue.continueparaclientes.androidExtensions.hideKeyboard
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
+class LoginActivity : AppCompatActivity(), CoroutineScope {
 
-class LoginActivity : AppCompatActivity() {
+    val job = Job()
+    override val coroutineContext: CoroutineContext get() = Dispatchers.Main + job
 
     private lateinit var mAuth: FirebaseAuth
+
+    private val mListener = FirebaseAuth.AuthStateListener {
+        if (it.currentUser != null) {
+            startActivity(Intent(this@LoginActivity, DashboardActivity::class.java))
+            finish()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,12 +36,7 @@ class LoginActivity : AppCompatActivity() {
         delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
         FirebaseApp.initializeApp(this)
-        mAuth = FirebaseAuth.getInstance()
-
-        if (mAuth.currentUser != null) {
-            startActivity(Intent(this, DashboardActivity::class.java))
-            finish()
-        }
+        FirebaseApp.initializeApp(this)
 
         supportActionBar?.apply {
             setHomeButtonEnabled(false)
@@ -41,7 +47,7 @@ class LoginActivity : AppCompatActivity() {
         login.setOnClickListener { doLogin() }
 
         noAccount.setOnClickListener { startActivity(Intent(this, NewAccount::class.java)) }
-        
+
         password.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 doLogin()
@@ -67,13 +73,19 @@ class LoginActivity : AppCompatActivity() {
             else -> {
                 linearLayout.alpha = 0.5f
                 progress.visibility = View.VISIBLE
+                email.isEnabled = false
+                password.isEnabled = false
+                login.isEnabled = false
 
                 mAuth.signInWithEmailAndPassword(
-                    email.text.toString(),
-                    password.text.toString()
+                        email.text.toString(),
+                        password.text.toString()
                 ).addOnCompleteListener {
                     linearLayout.alpha = 1f
                     progress.visibility = View.GONE
+                    email.isEnabled = true
+                    password.isEnabled = true
+                    login.isEnabled = true
 
                     if (it.isSuccessful)
                         startActivity(Intent(this, DashboardActivity::class.java))
@@ -85,7 +97,25 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        launch (Dispatchers.Default) {
+            while (FirebaseAuth.getInstance() == null) delay(100)
+            mAuth = FirebaseAuth.getInstance()
+            withContext(Dispatchers.Main) {
+                mAuth.addAuthStateListener(mListener)
+            }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mAuth.removeAuthStateListener(mListener)
+    }
+
     companion object {
         const val EMAIL_REGEX = "(?:[a-z0-9!#\$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#\$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])"
+        const  val CPF_REGEX = "([0-9]{2}[\\.]?[0-9]{3}[\\.]?[0-9]{3}[\\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\\.]?[0-9]{3}[\\.]?[0-9]{3}[-]?[0-9]{2})"
+
     }
 }

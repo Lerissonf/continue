@@ -92,51 +92,45 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/invalidCep" android:textColor="@color/wrong"
                     android:visibility="gone"/>
-            <View
-                    android:id="@+id/divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginBottom="30dp"
-                    android:background="?android:attr/listDivider"
-            />
+
             <TextView
-                    android:text="Dados do corretor"
-                    android:textColor="@color/colorAccent"
-                    android:layout_marginBottom="20dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/insuranceManagerData"
-                    android:textSize="12sp"/>
-            <TextView
-                    android:text="Comissão"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/comissionText"/>
+                android:text="CPF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/cpfText"/>
             <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:ems="10"
-                    android:id="@+id/comission"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:ems="10"
+                android:id="@+id/cpfCreate"/>
             <TextView
-                    android:text="Seguradoras"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/insuranceFirmsText"/>
-            <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textMultiLine"
-                    android:ems="10"
-                    android:id="@+id/insuranceFIrms"/>
+                android:text="CPF inválido"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/invalidCpf" android:textColor="@color/wrong"
+                android:visibility="gone"/>
+
             <TextView
-                    android:text="Inscrição Susep"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/susepText"/>
+                android:text="Idade"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/idadeText"/>
             <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:ems="10"
-                    android:id="@+id/susep"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/idadeCreate"/>
+
+            <TextView
+                android:text="Sexo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/sexoText"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:ems="10"
+                android:id="@+id/sexoCreate"/>
+
             <Button
                     android:text="Enviar"
                     android:layout_marginTop="20dp"
