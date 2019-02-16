@@ -74,6 +74,7 @@ class NewAccount : AppCompatActivity() {
 
                     progressCreate.visibility = View.VISIBLE
                     layout.alpha = 0.5f
+                    layout.isClickable = false
 
                     mAuth.createUserWithEmailAndPassword(
                         emailCreate.text.toString(),
@@ -81,6 +82,7 @@ class NewAccount : AppCompatActivity() {
 
                         progressCreate.visibility = View.GONE
                         layout.alpha = 1f
+                        layout.isClickable = true
 
                         if (it.isSuccessful && mAuth.currentUser?.uid != null) {
                             val corretor = Corretor(

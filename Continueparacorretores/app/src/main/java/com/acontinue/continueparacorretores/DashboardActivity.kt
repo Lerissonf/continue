@@ -13,20 +13,24 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.app_bar_dashboard.*
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
-class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, CoroutineScope {
+    private val job = Job()
+    override val coroutineContext: CoroutineContext get() = Dispatchers.Main + job
+
+    private val mListener = FirebaseAuth.AuthStateListener {
+        if (it.currentUser == null) {
+            Toast.makeText(this@DashboardActivity, "Não logado", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this@DashboardActivity, LoginActivity::class.java))
+            finish()
+        }
+    }
 
     private lateinit var mAuth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mAuth = FirebaseAuth.getInstance()
-
-//        if (mAuth.currentUser == null) {
-//            Toast.makeText(this, "Não logado", Toast.LENGTH_SHORT).show()
-//            startActivity(Intent(this, LoginActivity::class.java))
-//            finish()
-//        }
-
 
         setContentView(R.layout.activity_dashboard)
         setSupportActionBar(toolbar)
@@ -96,5 +100,21 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun onStart() {
+        super.onStart()
+        launch (Dispatchers.Default) {
+            while(FirebaseAuth.getInstance() == null) delay(100)
+            mAuth = FirebaseAuth.getInstance()
+            withContext(Dispatchers.Main) {
+                mAuth.addAuthStateListener(mListener)
+            }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mAuth.removeAuthStateListener(mListener)
     }
 }

@@ -11,11 +11,22 @@ import kotlinx.android.synthetic.main.activity_login.*
 import com.google.firebase.auth.FirebaseAuth
 import androidx.appcompat.app.AppCompatDelegate
 import com.acontinue.continueparacorretores.androidExtensions.hideKeyboard
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity(), CoroutineScope {
+    val job = Job()
+    override val coroutineContext: CoroutineContext get() = Dispatchers.Main + job
 
     private lateinit var mAuth: FirebaseAuth
+
+    private val mListener = FirebaseAuth.AuthStateListener {
+        if (it.currentUser != null) {
+            startActivity(Intent(this@LoginActivity, DashboardActivity::class.java))
+            finish()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,12 +36,6 @@ class LoginActivity : AppCompatActivity() {
         delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
         FirebaseApp.initializeApp(this)
-        mAuth = FirebaseAuth.getInstance()
-
-        if (mAuth.currentUser != null) {
-            startActivity(Intent(this, DashboardActivity::class.java))
-            finish()
-        }
 
         supportActionBar?.apply {
             setHomeButtonEnabled(false)
@@ -67,6 +72,9 @@ class LoginActivity : AppCompatActivity() {
             else -> {
                 linearLayout.alpha = 0.5f
                 progress.visibility = View.VISIBLE
+                login.isEnabled = false
+                password.isEnabled = false
+                login.isEnabled = false
 
                 mAuth.signInWithEmailAndPassword(
                     email.text.toString(),
@@ -74,6 +82,9 @@ class LoginActivity : AppCompatActivity() {
                 ).addOnCompleteListener {
                     linearLayout.alpha = 1f
                     progress.visibility = View.GONE
+                    login.isEnabled = true
+                    password.isEnabled = true
+                    login.isEnabled = true
 
                     if (it.isSuccessful)
                         startActivity(Intent(this, DashboardActivity::class.java))
@@ -83,6 +94,22 @@ class LoginActivity : AppCompatActivity() {
                 Unit
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        launch (Dispatchers.Default) {
+            while (FirebaseAuth.getInstance() == null) delay(100)
+            mAuth = FirebaseAuth.getInstance()
+            withContext(Dispatchers.Main) {
+                mAuth.addAuthStateListener(mListener)
+            }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mAuth.removeAuthStateListener(mListener)
     }
 
     companion object {
