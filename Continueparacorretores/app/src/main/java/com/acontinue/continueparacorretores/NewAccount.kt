@@ -12,6 +12,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_new_account.*
+import java.lang.IllegalArgumentException
 
 class NewAccount : AppCompatActivity() {
 
@@ -89,11 +90,17 @@ class NewAccount : AppCompatActivity() {
                                 comission.text.toString().toFloat(),
                                 address.text.toString(),
                                 susep.text.toString(),
-                                mAuth.currentUser?.uid.toString(),
                                 name.text.toString(),
                                 insuranceFIrms.text.toString()
                                 )
-                            myRef.push().setValue(corretor)
+                            try {
+                                myRef
+                                    .child(mAuth.currentUser?.uid ?: throw IllegalArgumentException())
+                                    .setValue(corretor)
+                            } catch (e: IllegalArgumentException) {
+                                Toast.makeText(this, "Um erro aconteceu", Toast.LENGTH_SHORT).show()
+                            }
+
                             Toast.makeText(this, "Tudo pronto", Toast.LENGTH_SHORT).show()
                             finish()
                         } else {
