@@ -8,11 +8,14 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import com.acontinue.continueparaclientes.models.Cliente
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.app_bar_dashboard.*
+import kotlinx.android.synthetic.main.nav_header_dashboard.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
@@ -21,7 +24,8 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     private val job = Job()
     override val coroutineContext: CoroutineContext get() = Dispatchers.Main + job
-
+    private var user:FirebaseUser? = null
+    private var cliente:Cliente? = null
     private val mListener = FirebaseAuth.AuthStateListener {
         if (it.currentUser == null) {
             Toast.makeText(this@DashboardActivity, "Não logado", Toast.LENGTH_SHORT).show()
@@ -115,7 +119,10 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         launch (Dispatchers.Default) {
             while(FirebaseAuth.getInstance() == null) delay(100)
             mAuth = FirebaseAuth.getInstance()
+            user = mAuth.currentUser
+            while (nameUser == null) delay (100)
             withContext(Dispatchers.Main) {
+                emailUser.text = user?.email?:""
                 mAuth.addAuthStateListener(mListener)
             }
         }
