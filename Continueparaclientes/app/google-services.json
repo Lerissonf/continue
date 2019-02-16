@@ -8,6 +8,50 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:345900095079:android:efb987f989904662",
+        "android_client_info": {
+          "package_name": "com.acontinue.continueparaclientes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "345900095079-2c47qrbi739q5r5oupnnpjj5q0p44jfj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.acontinue.continueparaclientes",
+            "certificate_hash": "05ba4916c314c3318003a5b0607c163c807311a7"
+          }
+        },
+        {
+          "client_id": "345900095079-p6agv1sqg3i6u4cdpelqgncqjesklhgb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlsdbe3B94HxynBjc7DJ2aWNgIPPFjk5g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "345900095079-p6agv1sqg3i6u4cdpelqgncqjesklhgb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:345900095079:android:3e41ed21ef86e9c5",
         "android_client_info": {
           "package_name": "com.acontinue.continueparacorretores"
@@ -44,37 +88,6 @@
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:345900095079:android:c83c3ac96079679a",
-        "android_client_info": {
-          "package_name": "open.sourse.campus.party.continuecpbr"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "345900095079-p6agv1sqg3i6u4cdpelqgncqjesklhgb.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBlsdbe3B94HxynBjc7DJ2aWNgIPPFjk5g"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2
