@@ -63,6 +63,8 @@ class NewAccount : AppCompatActivity() {
             when {
                 idadeCreate.text.toString().isBlank() ->
                     Toast.makeText(this, "Idade é obrigatório", Toast.LENGTH_LONG).show()
+                telefoneCreate.text.toString().isBlank() ->
+                    Toast.makeText(this, "Telefone é obrigatório", Toast.LENGTH_LONG).show()
                 sexoCreate.text.toString().isBlank() ->
                     Toast.makeText(this, "Sexo é obrigatório", Toast.LENGTH_LONG).show()
                 name.text.toString().isBlank() ->
@@ -101,9 +103,10 @@ class NewAccount : AppCompatActivity() {
                                 idadeCreate.text.toString().toInt(),
                                 address.text.toString(),
                                 sexoCreate.text.toString(),
-                                mAuth.currentUser?.uid.toString(),
+                                    emailCreate.text.toString(),
                                 name.text.toString(),
-                                cpfCreate.text.toString()
+                                cpfCreate.text.toString(),
+                                    telefoneCreate.text.toString()
                                 )
                             myRef.push().setValue(cliente)
                             //myRef

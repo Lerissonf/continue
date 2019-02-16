@@ -130,6 +130,16 @@
                 android:inputType="textEmailAddress"
                 android:ems="10"
                 android:id="@+id/sexoCreate"/>
+            <TextView
+                android:text="Telefone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/telefoneText"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:ems="10"
+                android:id="@+id/telefoneCreate"/>
 
             <Button
                     android:text="Enviar"
