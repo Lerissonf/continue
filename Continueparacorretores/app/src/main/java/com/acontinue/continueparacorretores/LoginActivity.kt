@@ -72,7 +72,7 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
             else -> {
                 linearLayout.alpha = 0.5f
                 progress.visibility = View.VISIBLE
-                login.isEnabled = false
+                email.isEnabled = false
                 password.isEnabled = false
                 login.isEnabled = false
 
@@ -82,7 +82,7 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
                 ).addOnCompleteListener {
                     linearLayout.alpha = 1f
                     progress.visibility = View.GONE
-                    login.isEnabled = true
+                    email.isEnabled = true
                     password.isEnabled = true
                     login.isEnabled = true
 
